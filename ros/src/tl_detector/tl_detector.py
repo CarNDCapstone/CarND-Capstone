@@ -25,6 +25,7 @@ class TLDetector(object):
         self.camera_image = None
         self.waypoint_tree = None
         self.lights = []
+        self.state = None
 
         sub1 = rospy.Subscriber('/current_pose', PoseStamped, self.pose_cb)
         sub2 = rospy.Subscriber('/base_waypoints', Lane, self.waypoints_cb)
@@ -44,6 +45,7 @@ class TLDetector(object):
 
         self.upcoming_red_light_pub = rospy.Publisher('/traffic_waypoint', Int32, queue_size=1)
 
+        self.debug_publisher = rospy.Publisher('/detected_light_images', Image, queue_size=1)
         self.bridge = CvBridge()
         self.light_classifier = TLClassifier()
         self.listener = tf.TransformListener()
@@ -80,7 +82,14 @@ class TLDetector(object):
         """
         self.has_image = True
         self.camera_image = msg
-        light_wp, state = self.process_traffic_lights()
+        
+        cv_image = self.bridge.imgmsg_to_cv2(self.camera_image, "bgr8")
+        cv_image = cv2.rectangle(cv_image, (100, 100), (200, 200), (0, 255, 0))
+        #cv_gray = cv2.cvtColor(cv_image, cv2.COLOR_BGR2GRAY)
+        cv_msg = self.bridge.cv2_to_imgmsg(cv_image, encoding="bgr8")
+        self.debug_publisher.publish(cv_msg)
+#        light_wp, state = self.process_traffic_lights()
+        state = None
 
         '''
         Publish upcoming red lights at camera frequency.
@@ -131,7 +140,8 @@ class TLDetector(object):
         #     self.prev_light_loc = None
         #     return False
 
-        # cv_image = self.bridge.imgmsg_to_cv2(self.camera_image, "bgr8")
+#        cv_image = self.bridge.imgmsg_to_cv2(self.camera_image, "bgr8")
+#        cv2.imwrite("/tmp/foo.jpg", cv_image)
 
         # #Get classification
         # return self.light_classifier.get_classification(cv_image)
