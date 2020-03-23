@@ -1,4 +1,0 @@
-<?xml version="1.0"?>
-<launch>
-    <node pkg="tl_detector_2" type="tl_detector_2.py" name="tl_detector_2" output="screen" cwd="node"/>
-</launch>
