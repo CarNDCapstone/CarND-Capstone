@@ -1,9 +1,10 @@
 # Udacity capstone project dockerfile
-FROM nvidia/cuda:10.1-cudnn7-devel-ubuntu16.04
+#FROM nvidia/cuda:10.0-cudnn7-devel-ubuntu16.04
+FROM tensorflow/tensorflow:1.15.0-gpu
 
 ARG DEBIAN_FRONTEND=noninteractive
 
-ARG ROS_DISTRO=kinetic
+ARG ROS_DISTRO=melodic
 
 RUN apt-get update && \
     apt-get install -y \
@@ -11,21 +12,23 @@ RUN apt-get update && \
     python-pip \
     lsb-release \
     vim \
-    nano
+    emacs25-nox \
+    nano \
+    git
 
 RUN pip install --upgrade pip
 
 RUN pip install --upgrade setuptools
 RUN pip install --upgrade futures==3.1.1
-RUN pip install tensorflow==1.15.0
 
-# Install ros
 RUN sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
 RUN apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
 RUN apt-get update && \
-    apt-get install -y ros-$ROS_DISTRO-desktop-full && \
-    rosdep init && rosdep update && \
-    echo "source /opt/ros/${ROS_DISTRO}/setup.bash" >> ~/.bashrc
+    apt-get install -y ros-$ROS_DISTRO-desktop-full
+
+RUN echo "source /opt/ros/${ROS_DISTRO}/setup.bash" >> ~/.bashrc
+RUN apt-get install -y python-rosdep
+RUN rosdep init && rosdep update
 
 RUN apt-get install -y ros-$ROS_DISTRO-cv-bridge \
     ros-$ROS_DISTRO-pcl-ros \
@@ -41,16 +44,14 @@ RUN apt-get update
 RUN sh -c 'echo "yaml http://packages.dataspeedinc.com/ros/ros-public-'$ROS_DISTRO'.yaml '$ROS_DISTRO'" > /etc/ros/rosdep/sources.list.d/30-dataspeed-public-'$ROS_DISTRO'.list'
 RUN rosdep update
 RUN apt-get install -y ros-$ROS_DISTRO-dbw-mkz
-RUN apt-get upgrade -y
+#RUN apt-get upgrade -y
 # end installing Dataspeed DBW
 
-## install python packages
-RUN apt-get install -y python-pip
+# install python packages
 COPY requirements_modern_gpu.txt ./requirements_modern_gpu.txt
 RUN pip install -r requirements_modern_gpu.txt
 
 # install required ros dependencies
-
 # socket io
 RUN apt-get install -y netbase
 
@@ -62,5 +63,4 @@ WORKDIR /capstone/ros
 EXPOSE 4567
 # port for Jupyter notebook
 EXPOSE 8888
-RUN apt-get update && apt-get install -y git
 COPY jupyter_notebook_config.py /root/.jupyter/
