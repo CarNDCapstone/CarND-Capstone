@@ -63,3 +63,4 @@ EXPOSE 4567
 # port for Jupyter notebook
 EXPOSE 8888
 RUN apt-get update && apt-get install -y git
+COPY jupyter_notebook_config.py /root/.jupyter/
