@@ -1,9 +1,53 @@
+import numpy as np
+import os
+import six.moves.urllib as urllib
+import sys
+import tarfile
+import tensorflow as tf
+import zipfile
+
+from collections import defaultdict
+from io import StringIO
+
+from PIL import Image
+
+from object_detection.utils import label_map_util
+from object_detection.utils import visualization_utils as vis_util
+
 from styx_msgs.msg import TrafficLight
+from scipy.stats import mode
+
+MODEL_NAME = 'rcnn_custom_graph'
+PATH_TO_FROZEN_GRAPH = MODEL_NAME + '/frozen_inference_graph.pb'
+PATH_TO_LABELS = 'training/label_map.pbtxt'
+NUM_CLASSES = 3 
+SCORE_THRESH = 0.85
+class_lookup = {
+        1 : Traffic_Light.GREEN,
+        2 : Traffic_Light.YELLOW,
+        3 : Traffic_Light.RED,
+}
 
 class TLClassifier(object):
     def __init__(self):
         #TODO load classifier
-        pass
+        self.detection_graph, self.label_math, self.categories, self.category_index = self.import_graph()
+        tf_config = tf.ConfigProto()
+        tf_config.gpu_options.allow_growth = True
+        # TODO: check if we need detection_graph.as_default here
+
+    def import_graph(self):
+        detection_graph = tf.Graph()
+        with detection_graph.as_default():
+            od_graph_def = tf.GraphDef()
+            with tf.gfile.GFile(PATH_TO_FROZEN_GRAPH, 'rb') as fid:
+                serialized_graph = fid.read()
+                od_graph_def.ParseFromString(serialized_graph)
+                tf.import_graph_def(od_graph_def, name='')
+        label_map = label_map_util.load_labelmap(PATH_TO_LABELS)
+        categories = label_map_util.convert_label_map_to_categories(label_map, max_num_classes=NUM_CLASSES, use_display_name=True)
+        category_index = label_map_util.create_category_index(categories)
+        return detection_graph, label_math, categories, category_index
 
     def get_classification(self, image):
         """Determines the color of the traffic light in the image
@@ -15,5 +59,27 @@ class TLClassifier(object):
             int: ID of traffic light color (specified in styx_msgs/TrafficLight)
 
         """
-        #TODO implement light color prediction
-        return TrafficLight.UNKNOWN
+        with detection_graph.as_default():
+            with tf.Session(graph=detection_graph, config=config) as sess:
+
+                image_tensor = self.detection_graph.get_tensor_by_name('image_tensor:0')
+                # Each box represents a part of the image where a particular object was detected.
+                detection_boxes = self.detection_graph.get_tensor_by_name('detection_boxes:0')
+                # Each score represent how level of confidence for each of the objects.
+                # Score is shown on the result image, together with the class label.
+                detection_scores = self.detection_graph.get_tensor_by_name('detection_scores:0')
+                detection_classes = self.detection_graph.get_tensor_by_name('detection_classes:0')
+                num_detections = self.detection_graph.get_tensor_by_name('num_detections:0')
+
+                image_np_expanded = np.expand_dims(image, axis=0)
+
+                (boxes, scores, classes, num) = sess.run(
+                [detection_boxes, detection_scores, detection_classes, num_detections],
+                feed_dict={image_tensor: image_np_expanded})
+
+                scores = scores[0]
+                classes = classes[0]
+                good_scores = np.argwhere(scores > SCORE_THRESH)
+                good_classes = classes[good_scores]
+                class_mode = mode(good_classes)[0][0]
+                return class_lookup[class_mode]
