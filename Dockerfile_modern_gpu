@@ -64,3 +64,4 @@ EXPOSE 4567
 # port for Jupyter notebook
 EXPOSE 8888
 COPY jupyter_notebook_config.py /root/.jupyter/
+RUN apt-get -qq install libprotobuf-java protobuf-compiler
