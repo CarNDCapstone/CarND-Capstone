@@ -45,6 +45,11 @@ class TLClassifier(object):
         self.tf_config.gpu_options.allow_growth = True
         # TODO: check if we need detection_graph.as_default here
         self.sess = tf.Session(graph=self.detection_graph, config=self.tf_config)
+        # Run fake data during init to warm up TensorFlow's memory allocator
+        warmup_iter = 10
+        for iter in range(warmup_iter):
+            synth_data = np.random.randint(low=0, high=255, size=(600, 800, 3), dtype=np.uint8)
+            self.inference(synth_data)
 
     def import_graph(self):
         detection_graph = tf.Graph()
@@ -59,17 +64,7 @@ class TLClassifier(object):
         category_index = label_map_util.create_category_index(categories)
         return detection_graph, label_map, categories, category_index
 
-    def get_classification(self, image):
-        """Determines the color of the traffic light in the image
-
-        Args:
-            image (cv::Mat): image containing the traffic light
-
-        Returns:
-            int: ID of traffic light color (specified in styx_msgs/TrafficLight)
-
-        """
-
+    def inference(self, image):
         image_tensor = self.detection_graph.get_tensor_by_name('image_tensor:0')
         # Each box represents a part of the image where a particular object was detected.
         detection_boxes = self.detection_graph.get_tensor_by_name('detection_boxes:0')
@@ -85,11 +80,41 @@ class TLClassifier(object):
             [detection_boxes, detection_scores, detection_classes, num_detections],
             feed_dict={image_tensor: image_np_expanded})
 
+        return boxes, scores, classes, num
+
+    def get_classification(self, image):
+        """Determines the color of the traffic light in the image
+
+        Args:
+            image (cv::Mat): image containing the traffic light
+
+        Returns:
+            int: ID of traffic light color (specified in styx_msgs/TrafficLight)
+
+        """
+
+#        image_tensor = self.detection_graph.get_tensor_by_name('image_tensor:0')
+#        # Each box represents a part of the image where a particular object was detected.
+#        detection_boxes = self.detection_graph.get_tensor_by_name('detection_boxes:0')
+#        # Each score represent how level of confidence for each of the objects.
+#        # Score is shown on the result image, together with the class label.
+#        detection_scores = self.detection_graph.get_tensor_by_name('detection_scores:0')
+#        detection_classes = self.detection_graph.get_tensor_by_name('detection_classes:0')
+#        num_detections = self.detection_graph.get_tensor_by_name('num_detections:0')
+#
+#        image_np_expanded = np.expand_dims(image, axis=0)
+#
+#        (boxes, scores, classes, num) = self.sess.run(
+#            [detection_boxes, detection_scores, detection_classes, num_detections],
+#            feed_dict={image_tensor: image_np_expanded})
+#
+        boxes, scores, classes, num = self.inference(image)
+
         scores = scores[0]
         classes = classes[0]
         good_scores = np.argwhere(scores > SCORE_THRESH)
         good_classes = classes[good_scores]
-        if len(good_classes) < 1:
+        if num < 1:
             # No detections
             return TrafficLight.UNKNOWN
         class_mode = int(mode(good_classes)[0][0][0])
