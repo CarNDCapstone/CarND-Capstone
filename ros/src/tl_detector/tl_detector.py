@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import rospy
-from std_msgs.msg import Int32
+from std_msgs.msg import Int32, String
 from geometry_msgs.msg import PoseStamped, Pose
 from styx_msgs.msg import TrafficLightArray, TrafficLight
 from styx_msgs.msg import Lane
@@ -15,6 +15,11 @@ from light_classification.tl_classifier import TLClassifier
 from scipy.spatial import KDTree
 
 STATE_COUNT_THRESHOLD = 3
+COLOR_TO_STRING = {
+        TrafficLight.GREEN : "GREEN", 
+        TrafficLight.YELLOW : "YELLOW", 
+        TrafficLight.RED : "RED", TrafficLight.UNKNOWN : "UNKNOWN"
+}
 
 class TLDetector(object):
     def __init__(self):
@@ -44,7 +49,7 @@ class TLDetector(object):
         self.config = yaml.load(config_string)
 
         self.upcoming_red_light_pub = rospy.Publisher('/traffic_waypoint', Int32, queue_size=1)
-
+        self.light_detector_pub = rospy.Publisher('/tl_detections', String, queue_size=1)
         self.bridge = CvBridge()
         self.light_classifier = TLClassifier()
         self.listener = tf.TransformListener()
@@ -128,7 +133,6 @@ class TLDetector(object):
             int: ID of traffic light color (specified in styx_msgs/TrafficLight)
 
         # """
-        # Check if it's "rgb8" or "bgr8"
         cv_image = self.bridge.imgmsg_to_cv2(self.camera_image, "rgb8")
         state = TrafficLight.UNKNOWN if not self.has_image else self.classifier.get_classification(cv_image)
         return state
@@ -181,6 +185,7 @@ class TLDetector(object):
         if closest_light:
             #state = self.get_light_state(closest_light)
             state = self.get_light_state()
+            self.light_detector_pub.publish(String(COLOR_TO_STRING[state]))
             return line_wp_idx, state
 
         return -1, TrafficLight.UNKNOWN
