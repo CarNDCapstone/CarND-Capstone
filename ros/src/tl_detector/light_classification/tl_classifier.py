@@ -29,6 +29,14 @@ class_lookup = {
         3 : TrafficLight.RED,
 }
 
+class NullContextManager(object):
+    def __init__(self, dummy_resource=None):
+        self.dummy_resource = dummy_resource
+    def __enter__(self):
+        return self.dummy_resource
+    def __exit__(self, *args):
+        pass
+
 class TLClassifier(object):
     def __init__(self):
         #TODO load classifier
@@ -36,6 +44,7 @@ class TLClassifier(object):
         self.tf_config = tf.ConfigProto()
         self.tf_config.gpu_options.allow_growth = True
         # TODO: check if we need detection_graph.as_default here
+        self.sess = tf.Session(graph=self.detection_graph, config=self.tf_config)
 
     def import_graph(self):
         detection_graph = tf.Graph()
@@ -60,27 +69,27 @@ class TLClassifier(object):
             int: ID of traffic light color (specified in styx_msgs/TrafficLight)
 
         """
-        with self.detection_graph.as_default():
-            with tf.Session(graph=self.detection_graph, config=self.tf_config) as sess:
 
-                image_tensor = self.detection_graph.get_tensor_by_name('image_tensor:0')
-                # Each box represents a part of the image where a particular object was detected.
-                detection_boxes = self.detection_graph.get_tensor_by_name('detection_boxes:0')
-                # Each score represent how level of confidence for each of the objects.
-                # Score is shown on the result image, together with the class label.
-                detection_scores = self.detection_graph.get_tensor_by_name('detection_scores:0')
-                detection_classes = self.detection_graph.get_tensor_by_name('detection_classes:0')
-                num_detections = self.detection_graph.get_tensor_by_name('num_detections:0')
+        image_tensor = self.detection_graph.get_tensor_by_name('image_tensor:0')
+        # Each box represents a part of the image where a particular object was detected.
+        detection_boxes = self.detection_graph.get_tensor_by_name('detection_boxes:0')
+        # Each score represent how level of confidence for each of the objects.
+        # Score is shown on the result image, together with the class label.
+        detection_scores = self.detection_graph.get_tensor_by_name('detection_scores:0')
+        detection_classes = self.detection_graph.get_tensor_by_name('detection_classes:0')
+        num_detections = self.detection_graph.get_tensor_by_name('num_detections:0')
 
-                image_np_expanded = np.expand_dims(image, axis=0)
+        image_np_expanded = np.expand_dims(image, axis=0)
 
-                (boxes, scores, classes, num) = sess.run(
-                [detection_boxes, detection_scores, detection_classes, num_detections],
-                feed_dict={image_tensor: image_np_expanded})
+        (boxes, scores, classes, num) = self.sess.run(
+            [detection_boxes, detection_scores, detection_classes, num_detections],
+            feed_dict={image_tensor: image_np_expanded})
 
-                scores = scores[0]
-                classes = classes[0]
-                good_scores = np.argwhere(scores > SCORE_THRESH)
-                good_classes = classes[good_scores]
-                class_mode = mode(good_classes)[0][0]
-                return class_lookup[class_mode]
+            scores = scores[0]
+            classes = classes[0]
+            good_scores = np.argwhere(scores > SCORE_THRESH)
+            good_classes = classes[good_scores]
+            class_mode = int(mode(good_classes)[0][0][0])
+            #d = {1: "GREEN", 2: "YELLOW", 3: "RED"}
+            #raise Exception("####### LIGHT IS: %s" % d[class_mode])
+            return class_lookup[class_mode]
