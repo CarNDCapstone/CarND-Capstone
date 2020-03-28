@@ -11,7 +11,7 @@ import tf
 import cv2
 import yaml
 
-from light_classification import TLClassifier
+from light_classification.tl_classifier import TLClassifier
 
 from scipy.spatial import KDTree
 
