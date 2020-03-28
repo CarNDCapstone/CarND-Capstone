@@ -89,7 +89,8 @@ class TLClassifier(object):
         classes = classes[0]
         good_scores = np.argwhere(scores > SCORE_THRESH)
         good_classes = classes[good_scores]
+        if len(good_classes) < 1:
+            # No detections
+            return TrafficLight.UNKNOWN
         class_mode = int(mode(good_classes)[0][0][0])
-        #d = {1: "GREEN", 2: "YELLOW", 3: "RED"}
-        #raise Exception("####### LIGHT IS: %s" % d[class_mode])
         return class_lookup[class_mode]
