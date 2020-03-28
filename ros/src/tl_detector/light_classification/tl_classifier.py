@@ -33,8 +33,8 @@ class TLClassifier(object):
     def __init__(self):
         #TODO load classifier
         self.detection_graph, self.label_map, self.categories, self.category_index = self.import_graph()
-        tf_config = tf.ConfigProto()
-        tf_config.gpu_options.allow_growth = True
+        self.tf_config = tf.ConfigProto()
+        self.tf_config.gpu_options.allow_growth = True
         # TODO: check if we need detection_graph.as_default here
 
     def import_graph(self):
@@ -60,8 +60,8 @@ class TLClassifier(object):
             int: ID of traffic light color (specified in styx_msgs/TrafficLight)
 
         """
-        with detection_graph.as_default():
-            with tf.Session(graph=detection_graph, config=config) as sess:
+        with self.detection_graph.as_default():
+            with tf.Session(graph=self.detection_graph, config=self.tf_config) as sess:
 
                 image_tensor = self.detection_graph.get_tensor_by_name('image_tensor:0')
                 # Each box represents a part of the image where a particular object was detected.

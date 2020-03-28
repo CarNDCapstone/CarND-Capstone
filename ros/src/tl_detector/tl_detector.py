@@ -176,7 +176,8 @@ class TLDetector(object):
                 line_wp_idx = temp_wp_idx
 
         if closest_light:
-            state = self.get_light_state(closest_light)
+            #state = self.get_light_state(closest_light)
+            state = TrafficLight.UNKNOWN if not self.has_image else self.classifier.get_classification(self.camera_image)
             return line_wp_idx, state
 
         return -1, TrafficLight.UNKNOWN
