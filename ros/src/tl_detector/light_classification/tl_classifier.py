@@ -23,15 +23,15 @@ PATH_TO_LABELS = 'training/label_map.pbtxt'
 NUM_CLASSES = 3 
 SCORE_THRESH = 0.85
 class_lookup = {
-        1 : Traffic_Light.GREEN,
-        2 : Traffic_Light.YELLOW,
-        3 : Traffic_Light.RED,
+#        1 : Traffic_Light.GREEN,
+#        2 : Traffic_Light.YELLOW,
+#        3 : Traffic_Light.RED,
 }
 
 class TLClassifier(object):
     def __init__(self):
         #TODO load classifier
-        self.detection_graph, self.label_math, self.categories, self.category_index = self.import_graph()
+        self.detection_graph, self.label_map, self.categories, self.category_index = self.import_graph()
         tf_config = tf.ConfigProto()
         tf_config.gpu_options.allow_growth = True
         # TODO: check if we need detection_graph.as_default here
@@ -47,7 +47,7 @@ class TLClassifier(object):
         label_map = label_map_util.load_labelmap(PATH_TO_LABELS)
         categories = label_map_util.convert_label_map_to_categories(label_map, max_num_classes=NUM_CLASSES, use_display_name=True)
         category_index = label_map_util.create_category_index(categories)
-        return detection_graph, label_math, categories, category_index
+        return detection_graph, label_map, categories, category_index
 
     def get_classification(self, image):
         """Determines the color of the traffic light in the image
@@ -83,3 +83,6 @@ class TLClassifier(object):
                 good_classes = classes[good_scores]
                 class_mode = mode(good_classes)[0][0]
                 return class_lookup[class_mode]
+
+if __name__ == "__main__":
+    tlc = TLClassifier()
