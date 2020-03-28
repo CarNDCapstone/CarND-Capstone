@@ -6,7 +6,6 @@ from styx_msgs.msg import TrafficLightArray, TrafficLight
 from styx_msgs.msg import Lane
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge
-from light_classification.tl_classifier import TLClassifier
 import tf
 import cv2
 import yaml
@@ -119,7 +118,7 @@ class TLDetector(object):
         closest_idx = self.waypoint_tree.query([x, y], 1)[1]
         return closest_idx
 
-    def get_light_state(self, light):
+    def get_light_state(self): #, light):
         """Determines the current color of the traffic light
 
         Args:
@@ -129,6 +128,10 @@ class TLDetector(object):
             int: ID of traffic light color (specified in styx_msgs/TrafficLight)
 
         # """
+        # Check if it's "rgb8" or "bgr8"
+        cv_image = self.bridge.imgmsg_to_cv2(self.camera_image, "bgr8")
+        state = TrafficLight.UNKNOWN if not self.has_image else self.classifier.get_classification(cv_image)
+        return state
         # if(not self.has_image):
         #     self.prev_light_loc = None
         #     return False
@@ -138,7 +141,7 @@ class TLDetector(object):
         # #Get classification
         # return self.light_classifier.get_classification(cv_image)
         # For testing, use light.state instead of a classification
-        return light.state
+#        return light.state
 
     def process_traffic_lights(self):
         """Finds closest visible traffic light, if one exists, and determines its
@@ -177,7 +180,7 @@ class TLDetector(object):
 
         if closest_light:
             #state = self.get_light_state(closest_light)
-            state = TrafficLight.UNKNOWN if not self.has_image else self.classifier.get_classification(self.camera_image)
+            state = self.get_light_state()
             return line_wp_idx, state
 
         return -1, TrafficLight.UNKNOWN
