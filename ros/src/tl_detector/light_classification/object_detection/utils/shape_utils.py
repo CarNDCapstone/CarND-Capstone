@@ -22,11 +22,7 @@ from __future__ import print_function
 from six.moves import zip
 import tensorflow as tf
 
-from object_detection.utils import static_shape
-
-
-get_dim_as_int = static_shape.get_dim_as_int
-
+from .static_shape import get_dim_as_int, get_height, get_width
 
 def _is_tensor(t):
   """Returns a boolean indicating whether the input is a tensor.
@@ -276,8 +272,8 @@ def check_min_image_dim(min_dim, image_tensor):
     ValueError: if `image_tensor`'s' width or height is smaller than `min_dim`.
   """
   image_shape = image_tensor.get_shape()
-  image_height = static_shape.get_height(image_shape)
-  image_width = static_shape.get_width(image_shape)
+  image_height = get_height(image_shape)
+  image_width = get_width(image_shape)
   if image_height is None or image_width is None:
     shape_assert = tf.Assert(
         tf.logical_and(tf.greater_equal(tf.shape(image_tensor)[1], min_dim),

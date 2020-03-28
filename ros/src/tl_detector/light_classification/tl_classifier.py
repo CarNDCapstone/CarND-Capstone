@@ -11,8 +11,8 @@ from io import StringIO
 
 from PIL import Image
 
-from object_detection.utils import label_map_util
-from object_detection.utils import visualization_utils as vis_util
+from .object_detection.utils import label_map_util
+from .object_detection.utils import visualization_utils as vis_util
 
 from styx_msgs.msg import TrafficLight
 from scipy.stats import mode
@@ -23,9 +23,9 @@ PATH_TO_LABELS = 'training/label_map.pbtxt'
 NUM_CLASSES = 3 
 SCORE_THRESH = 0.85
 class_lookup = {
-#        1 : Traffic_Light.GREEN,
-#        2 : Traffic_Light.YELLOW,
-#        3 : Traffic_Light.RED,
+        1 : TrafficLight.GREEN,
+        2 : TrafficLight.YELLOW,
+        3 : TrafficLight.RED,
 }
 
 class TLClassifier(object):
@@ -83,6 +83,3 @@ class TLClassifier(object):
                 good_classes = classes[good_scores]
                 class_mode = mode(good_classes)[0][0]
                 return class_lookup[class_mode]
-
-if __name__ == "__main__":
-    tlc = TLClassifier()
