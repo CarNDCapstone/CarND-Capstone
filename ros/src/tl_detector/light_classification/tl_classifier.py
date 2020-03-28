@@ -85,11 +85,11 @@ class TLClassifier(object):
             [detection_boxes, detection_scores, detection_classes, num_detections],
             feed_dict={image_tensor: image_np_expanded})
 
-            scores = scores[0]
-            classes = classes[0]
-            good_scores = np.argwhere(scores > SCORE_THRESH)
-            good_classes = classes[good_scores]
-            class_mode = int(mode(good_classes)[0][0][0])
-            #d = {1: "GREEN", 2: "YELLOW", 3: "RED"}
-            #raise Exception("####### LIGHT IS: %s" % d[class_mode])
-            return class_lookup[class_mode]
+        scores = scores[0]
+        classes = classes[0]
+        good_scores = np.argwhere(scores > SCORE_THRESH)
+        good_classes = classes[good_scores]
+        class_mode = int(mode(good_classes)[0][0][0])
+        #d = {1: "GREEN", 2: "YELLOW", 3: "RED"}
+        #raise Exception("####### LIGHT IS: %s" % d[class_mode])
+        return class_lookup[class_mode]
