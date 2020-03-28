@@ -20,7 +20,7 @@ from scipy.stats import mode
 MODEL_NAME = 'light_classification/' + 'rcnn_custom_graph'
 print("MODEL_NAME = %s" % MODEL_NAME)
 PATH_TO_FROZEN_GRAPH = MODEL_NAME + '/frozen_inference_graph.pb'
-PATH_TO_LABELS = 'training/label_map.pbtxt'
+PATH_TO_LABELS = 'light_classification/training/label_map.pbtxt'
 NUM_CLASSES = 3 
 SCORE_THRESH = 0.85
 class_lookup = {
