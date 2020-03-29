@@ -17,7 +17,7 @@ from .object_detection.utils import visualization_utils as vis_util
 from styx_msgs.msg import TrafficLight
 from scipy.stats import mode
 
-MODEL_NAME = 'light_classification/' + 'rcnn_custom_graph'
+MODEL_NAME = 'light_classification/' + 'ssd_custom_graph'
 print("MODEL_NAME = %s" % MODEL_NAME)
 PATH_TO_FROZEN_GRAPH = MODEL_NAME + '/frozen_inference_graph.pb'
 PATH_TO_LABELS = 'light_classification/training/label_map.pbtxt'
