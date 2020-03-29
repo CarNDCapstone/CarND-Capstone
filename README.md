@@ -33,7 +33,9 @@ Also, make sure you change directories to get inside the repo
 cd CarND-Capstone
 ```
 
-2. This setup depends a [Docker](https://www.docker.com/) image. If you'd like to know more about Docker containers, click [here](https://www.docker.com/resources/what-container).
+2. **Set up Docker** 
+
+This setup depends a [Docker](https://www.docker.com/) image. If you'd like to know more about Docker containers, click [here](https://www.docker.com/resources/what-container).
 
 **Why Docker?**
 * Makes software portable across platforms, like a virtual machine.
@@ -107,7 +109,8 @@ Sun Mar 29 21:32:42 2020
 
 **Memory issues on MacOS:** Docker lets containers use only 2 GB RAM on MacOS by default. Open the Docker app on MacOS, click Settings, and change to at least 4 GB. More is preferable.
 
-2. **Pull Docker container or build from source**
+
+3. **Pull Docker container or build from source**
 
 The container is already pre-built and is available on [Dockerhub](https://hub.docker.com/r/mkolod/udacity_carnd_capstone). You can pull the container as follows:
 ```
@@ -120,11 +123,11 @@ docker build -t mkolod/udacity_carnd_capstone -f Dockerfile_modern_gpu .
 ```
 This will build a Docker image called `mkolod/udacity/carnd_capstone`. Note that building from source may take a few minutes. Above `-f` specifies the Dockerfile we want to use (by default the build will use a file called `Dockerfile`) and `-t` stands for "tag," i.e. how we want to name the container. Let's name it the same as the one we would have pulled from Dockerhub.
 
-3. **Install the Udacity simulator**
+4. **Install the Udacity simulator**
 
 The instructions how to install the simulator on your particular platform can be found [here](https://github.com/udacity/CarND-Capstone/releases/tag/v1.3).
 
-4. **Launch the container**
+5. **Launch the container**
 While still at the root of the CarND-Capstone repository, launch a Docker container
 ```
 docker run --rm -it -p 4567:4567 -v `pwd`:/workspace mkolod/udacity_carnd_capstone
@@ -143,7 +146,7 @@ root@28064d9756ab:/capstone/ros
 docker run --rm -it -p 4567:4567 -v `pwd`:/workspace --gpus all mkolod/udacity_carnd_capstone
 ```
 
-5. **Set up ROS environment and launch nodes**
+6. **Set up ROS environment and launch nodes**
 
 We mounted the cloned repository in Docker under `/workspace`, so let's change directories.
 
@@ -179,7 +182,7 @@ You will start getting log output after this command. Note that until you launch
 
 The warnings will go away once you launch the simulator.
 
-6. **Launch the Udacity simulator**
+7. **Launch the Udacity simulator**
 
 Let's assume we are on a 64-bit Linux machine and are starting the simulator there.
 
