@@ -105,7 +105,7 @@ This will build a Docker image called `mkolod/udacity/carnd_capstone`. Note that
 
 The instructions how to install the simulator on your particular platform can be found [here](https://github.com/udacity/CarND-Capstone/releases/tag/v1.3).
 
-3. **Launch the container**
+4. **Launch the container**
 While still at the root of the CarND-Capstone repository, launch a Docker container
 ```
 docker run --rm -it -p 4567:4567 -v `pwd`:/workspace mkolod/udacity_carnd_capstone
@@ -124,7 +124,7 @@ root@28064d9756ab:/capstone/ros
 docker run --rm -it -p 4567:4567 -v `pwd`:/workspace --gpus all mkolod/udacity_carnd_capstone
 ```
 
-4. **Set up ROS environment and launch nodes**
+5. **Set up ROS environment and launch nodes**
 
 We mounted the cloned repository in Docker under `/workspace`, so let's change directories.
 
