@@ -1,6 +1,25 @@
 ## Udacity CarND Capstone Submission
 
-### Installation
+### Installation and Execution
+
+0. **Hardware specs tested**
+
+Before we talk about installing the software and running it, let's talk about the hardware characteristics. The simulator takes a lot of CPU power, as does ROS. If the neural network is running on CPU too, that will farther tax the CPU. If a GPU is available, that would lighten CPU load at least, but in any case, the available resources have to be adequate. We're listing 2 setups we tried, which were fast enough for the model to run at expected frame rates.
+
+* Setup 1:
+    * Linux laptop (2019 System76 Oryx Pro)
+    * Ubuntu 18.04 LTS
+    * 32 GB RAM
+    * 6-core Intel CPU (Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz)
+    * NVIDIA RTX 2070 GPU (CUDA compute capability 7.5, Turing architecture)
+    * [Docker 19.03.8](https://www.docker.com/)
+    * [nvidia-docker](https://github.com/NVIDIA/nvidia-docker
+* Setup 2:
+    * Apple laptop (2019 Macbook Pro)
+    * MacOS Catalina (10.15.3)
+    * 32 GB RAM
+    * 6-core Core i7 CPU
+    * Docker for MacOS with virtualization via HyperKit
 
 1. **Clone the repository**
 
