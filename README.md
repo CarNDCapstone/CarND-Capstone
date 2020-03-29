@@ -156,7 +156,22 @@ You will start getting log output after this command. Note that until you launch
 [ WARN] [1585517476.418286130]: position is missing
 [ WARN] [1585517476.418361765]: waypoint is missing
 [ WARN] [1585517476.418408371]: velocity is missing
-
 ```
 
 The warnings will go away once you launch the simulator.
+
+6. **Launch the Udacity simulator**
+
+Let's assume we are on a 64-bit Linux machine and are starting the simulator there.
+
+```
+./sys_int.x86_64
+```
+A menu will appear, asking for the preferred resolution and rendering quality. If the machine specs are unknown, it's best to first start with the smallest or next-to-smallest resolution and work up from there to see if the machine is responsive enough. So, first let's select 800x600. The rendering quality doesn't vary much, but higher settings tax the CPU, so select "Fastest."
+
+Next, select the "Highway" simulator. 
+
+When the simulator launches, select the "Camera" check box to provide the video feed to the traffic light detector, and unselect "Manual" to enable drive-by-wire (DBW).
+
+The launch will be similar for MacOS and Windows. Follow the OS-specific instructions provided by Udacity.
+
