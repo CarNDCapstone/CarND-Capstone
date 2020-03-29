@@ -13,7 +13,7 @@ Before we talk about installing the software and running it, let's talk about th
     * 6-core Intel CPU (Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz)
     * NVIDIA RTX 2070 GPU (CUDA compute capability 7.5, Turing architecture)
     * [Docker 19.03.8](https://www.docker.com/)
-    * [nvidia-docker](https://github.com/NVIDIA/nvidia-docker
+    * [nvidia-docker](https://github.com/NVIDIA/nvidia-docker)
 * Setup 2:
     * Apple laptop (2019 Macbook Pro)
     * MacOS Catalina (10.15.3)
