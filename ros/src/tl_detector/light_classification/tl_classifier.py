@@ -5,6 +5,7 @@ import sys
 import tarfile
 import tensorflow as tf
 import zipfile
+import rospy
 
 from collections import defaultdict
 from io import StringIO
@@ -15,6 +16,7 @@ from .object_detection.utils import label_map_util
 from .object_detection.utils import visualization_utils as vis_util
 
 from styx_msgs.msg import TrafficLight
+from std_msgs.msg import String
 from scipy.stats import mode
 
 MODEL_NAME = 'light_classification/' + 'ssd_custom_graph'
@@ -51,6 +53,8 @@ class TLClassifier(object):
         for iter in range(warmup_iter):
             synth_data = np.random.randint(low=0, high=255, size=(600, 800, 3), dtype=np.uint8)
             self.inference(synth_data)
+        light_detector_pub = rospy.Publisher('/tl_detections', String, queue_size=1)
+        light_detector_pub.publish(String("Light detector bootstrap executed. Synthetic data passed through model without errors."))
 
     def import_graph(self):
         detection_graph = tf.Graph()
