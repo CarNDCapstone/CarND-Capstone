@@ -13,6 +13,7 @@ import yaml
 from light_classification.tl_classifier import TLClassifier
 
 from scipy.spatial import KDTree
+from time import time
 
 STATE_COUNT_THRESHOLD = 3
 COLOR_TO_STRING = {
@@ -184,8 +185,13 @@ class TLDetector(object):
 
         if closest_light:
             #state = self.get_light_state(closest_light)
+            start = time()
             state = self.get_light_state()
-            self.light_detector_pub.publish(String(COLOR_TO_STRING[state]))
+            duration = time() - start
+            out_str = "Traffic light color: %s" % COLOR_TO_STRING[state]
+            if self.has_image:
+                out_str += ", inference_time = %.2f ms" % (duration * 1000)
+            self.light_detector_pub.publish(out_str)
             return line_wp_idx, state
 
         return -1, TrafficLight.UNKNOWN
