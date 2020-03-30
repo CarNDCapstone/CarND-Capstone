@@ -134,13 +134,14 @@ If you'd rather build the container from source, note that there are two Dockerf
 ```
 docker build -t mkolod/udacity_carnd_capstone -f Dockerfile_modern_gpu .
 ```
-This will build a Docker image called `mkolod/udacity/carnd_capstone`. Note that building from source may take a few minutes. Above `-f` specifies the Dockerfile we want to use (by default the build will use a file called `Dockerfile`) and `-t` stands for "tag," i.e. how we want to name the container. Let's name it the same as the one we would have pulled from Dockerhub.
+This will build a Docker image called `mkolod/udacity_carnd_capstone`. Note that building from source may take a few minutes. Above `-f` specifies the Dockerfile we want to use (by default the build will use a file called `Dockerfile`) and `-t` stands for "tag," i.e. how we want to name the container. Let's name it the same as the one we would have pulled from Dockerhub.
 
 4. **Install the Udacity simulator**
 
 The instructions how to install the simulator on your particular platform can be found [here](https://github.com/udacity/CarND-Capstone/releases/tag/v1.3).
 
 5. **Launch the container**
+
 While still at the root of the CarND-Capstone repository, launch a Docker container
 ```
 docker run --rm -it -p 4567:4567 -v `pwd`:/workspace mkolod/udacity_carnd_capstone
@@ -208,5 +209,5 @@ Next, select the "Highway" simulator.
 
 When the simulator launches, select the "Camera" check box to provide the video feed to the traffic light detector, and unselect "Manual" to enable drive-by-wire (DBW).
 
-The launch will be similar for MacOS and Windows. Follow the OS-specific instructions provided by Udacity.
+The simulator launch will be similar for MacOS and Windows. Follow the OS-specific instructions provided by Udacity.
 
