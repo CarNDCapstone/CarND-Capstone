@@ -1,6 +1,6 @@
 ## Udacity CarND Capstone Submission
 
-### Demo YouTube video
+## Demo YouTube video
 
 To see the full simulator track run, click [here](https://www.youtube.com/watch?v=eEbDz6ZHaAg).
 
