@@ -2,6 +2,8 @@
 
 ### Installation and Execution
 
+#### In a Docker container
+
 0. **Hardware specs tested**
 
 Before we talk about installing the software and running it, let's talk about the hardware characteristics. The simulator takes a lot of CPU power, as does ROS. If the neural network is running on CPU too, that will further tax the CPU. If a GPU is available, that would lighten CPU load at least, but in any case, the available resources have to be adequate. We're listing 2 setups we tried, which were fast enough for the model to run at expected frame rates.
@@ -210,4 +212,32 @@ Next, select the "Highway" simulator.
 When the simulator launches, select the "Camera" check box to provide the video feed to the traffic light detector, and unselect "Manual" to enable drive-by-wire (DBW).
 
 The simulator launch will be similar for MacOS and Windows. Follow the OS-specific instructions provided by Udacity.
+
+
+#### In the Udacity workspace/on Carla
+
+We found the Udacity workspace to be extremely slow - even without the deep learning model, ROS nodes wouldn't get the data from the simulator fast enough, and so the simulator feedback was delayed so much so as not to meet real-time requirements. However, we assume that something was wrong with the state of the VMs in which our workspaces were running, and it's not a systemic problem. It is possible to run the code in a workspace environment if the hardware is more responsive, and therefore to run on Carla as well. The Docker environment above simply allowed us to deploy on a system that was fast enough for real-time to pass the simulator submission.
+
+Workspace steps:
+
+* Clone the repo:
+```
+git clone https://github.com/CarNDCapstone/CarND-Capstone.git && cd CarND-Capstone/ros
+```
+* Run catkin_make
+```
+catkin_make
+```
+* Load env vars
+```
+source devel/setup.bash
+```
+* Change from TF 1.15 (Docker) to 1.3 (workspace)
+```
+git apply workspace.patch
+```
+* Start ROS nodes
+```
+roslaunch launch/styx.launch
+```
 
