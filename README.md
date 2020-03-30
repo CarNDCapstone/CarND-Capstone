@@ -2,6 +2,10 @@
 
 ## Installation and Execution
 
+### YouTube video
+
+To see the full simulator track run, click [here](https://www.youtube.com/watch?v=eEbDz6ZHaAg)
+
 ### In a Docker container
 
 0. **Hardware specs tested**
