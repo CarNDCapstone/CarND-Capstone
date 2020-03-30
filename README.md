@@ -53,7 +53,7 @@ This setup depends a [Docker](https://www.docker.com/) image. If you'd like to k
 
 **Note:** the authors only tested the setup on Ubuntu Linux and MacOS.
 
-**GPU acceleration:** This code uses neural network detection and classification for the traffic light model. GPU acceleration is only available in this setup when Docker runs natively on Linux. Fortunately, our detection model should be fast enough on a CPU, but using GPU acceleration is recommended whenever possible.
+**GPU acceleration:** This code uses neural network detection and classification for the traffic light model. GPU acceleration is only available in this setup when Docker runs natively on Linux. Fortunately, our detection model is fast enough on a CPU, but using GPU acceleration is recommended whenever possible.
 
 Supported GPUs include: Tesla K80, Tesla M60, Tesla P100, Tesla V100, GTX 1070/1080/1080Ti, RTX 2070/2080/2080Ti. Titan X, Titan XP and Titan RTX should also work.
 
@@ -82,7 +82,7 @@ sudo yum install -y nvidia-container-toolkit
 sudo systemctl restart docker
 ```
 
-If you have an NVIDIA GPU and correctly installed Docker and nvidia-docker, running a CUDA container (will be pulled automatically) should show your driver version (here 440.59) and GPU type (here GeForce RTX 207):
+If you have an NVIDIA GPU and correctly installed Docker and nvidia-docker, running a CUDA container (will be pulled automatically) should show your driver version (here 440.59) and GPU type (here GeForce RTX 2070):
 
 ```
 docker run --rm -it nvidia/cuda nvidia-smi
@@ -105,7 +105,20 @@ Sun Mar 29 21:32:42 2020
 
 ```
 
-**Docker without sudo:** Normally, starting a Docker container requires `sudo`. This required can be removed by configuring the Docker runtme correctly. On MacOS and Windows, this should be the default. On Linux, one has to issue a few commands
+**Docker without sudo:** Normally, starting a Docker container requires `sudo`. This required can be removed by configuring the Docker runtme correctly. On MacOS and Windows, this should be the default. On Linux, one has to issue a few commands:
+```
+sudo groupadd docker
+sudo usermod -aG docker $USER
+newgrp docker
+```
+
+Now you should be able to run docker without sudo:
+
+```
+docker run --rm hello-world
+```
+
+If Docker is complaining about the daemon not being up, try logging out of your account and logging back in. If that doesn't help, reboot your maching before moving onto next steps. 
 
 **Memory issues on MacOS:** Docker lets containers use only 2 GB RAM on MacOS by default. Open the Docker app on MacOS, click Settings, and change to at least 4 GB. More is preferable.
 
