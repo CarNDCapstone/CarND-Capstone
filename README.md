@@ -241,4 +241,4 @@ git apply workspace.patch
 ```
 roslaunch launch/styx.launch
 ```
-
+* Start the Udacity simulator as usual
