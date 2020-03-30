@@ -4,7 +4,7 @@
 
 0. **Hardware specs tested**
 
-Before we talk about installing the software and running it, let's talk about the hardware characteristics. The simulator takes a lot of CPU power, as does ROS. If the neural network is running on CPU too, that will farther tax the CPU. If a GPU is available, that would lighten CPU load at least, but in any case, the available resources have to be adequate. We're listing 2 setups we tried, which were fast enough for the model to run at expected frame rates.
+Before we talk about installing the software and running it, let's talk about the hardware characteristics. The simulator takes a lot of CPU power, as does ROS. If the neural network is running on CPU too, that will further tax the CPU. If a GPU is available, that would lighten CPU load at least, but in any case, the available resources have to be adequate. We're listing 2 setups we tried, which were fast enough for the model to run at expected frame rates.
 
 * Setup 1:
     * Linux laptop (2019 System76 Oryx Pro)
