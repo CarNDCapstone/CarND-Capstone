@@ -1,10 +1,10 @@
 ## Udacity CarND Capstone Submission
 
-## Installation and Execution
-
-### YouTube video
+### Demo YouTube video
 
 To see the full simulator track run, click [here](https://www.youtube.com/watch?v=eEbDz6ZHaAg).
+
+## Installation and Execution
 
 ### In the Udacity workspace / on Carla
 
