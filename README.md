@@ -1,4 +1,4 @@
-# Udacity CarND Capstone Submission
+## Udacity CarND Capstone Submission
 
 ## Installation and Execution
 
@@ -214,7 +214,7 @@ When the simulator launches, select the "Camera" check box to provide the video 
 The simulator launch will be similar for MacOS and Windows. Follow the OS-specific instructions provided by Udacity.
 
 
-### In the Udacity workspace/on Carla
+### In the Udacity workspace / on Carla
 
 We found the Udacity workspace to be extremely slow - even without the deep learning model, ROS nodes wouldn't get the data from the simulator fast enough, and so the simulator feedback was delayed so much so as not to meet real-time requirements. However, we assume that something was wrong with the state of the VMs in which our workspaces were running, and it's not a systemic problem. It is possible to run the code in a workspace environment if the hardware is more responsive, and therefore to run on Carla as well. The Docker environment above simply allowed us to deploy on a system that was fast enough for real-time to pass the simulator submission.
 
