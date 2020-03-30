@@ -233,6 +233,7 @@ catkin_make
 source devel/setup.bash
 ```
 * Change from TF 1.15 (Docker) to 1.3 (workspace)
+Either change `TF_VERSION = "1.15"` to `1.3` in `src/tl_detector/light_classification/tl_classifier.py`, or type the following while being in the `ros` subdirectory of the repository:
 ```
 git apply workspace.patch
 ```
