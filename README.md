@@ -23,7 +23,7 @@ Once the software system passes the first test on the simulator, it is transferr
 
 In order to react correctly to the traffic lights, the software system must achieve __1) detection.__ Identify the traffic light housing with a bounding box and __2)__ Classification.__ Look within the bounding box to determine the state of the light (green, yellow, red).  A single shot detector (SSD; Liu et al. 2016 <https://arxiv.org/abs/1512.02325>) was used for this purpose.
 
-![Figure 3](./images/SSD_architecture.png)
+![Figure 3](./images/ssd_architecture.png)
 ***Figure 3: The SSD neural network architecture.***
 
 The SSD used in this project took advantage of ***transfer learning*** in which a pretrained network is adapted for use in a specific project. The pretrained network selected was from the TensorFlow Zoo, which is a collection of detection models pre-trained on massive datasets. (<https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md>). 
