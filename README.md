@@ -83,7 +83,7 @@ ROS (Robot Operating System) provides libraries and tools to help software devel
 
 The robot operating system is an open source software framework developed initially by Willow Garage (www) and is ideally suited for complex robot operations that often involve multiple systems running independently. For example, the multiple modules in Carla include: __1)__ a camera that produces raw images, __2)__ the object detection and classification system which consumes the raw images and produces the state of the light (i.e., green, yellow, red), __3)__ a decision-making system that decides whether to stop at a light or continue through it, and __4)__ the vehicle control system that is responsible for steering, accelerating and decelerating the car, just to name a few.  Indeed, most robots and autonomous vehicles are may contain dozens of interacting modules. Writing a single program that integrates all of the modules in a self-driving car would be very challenging, to say the least. 
 
-![Figure 7](./images/ros_graph.png) ***Figure 7: ROS architechure showing the ROS nodes and topics used in the project.***
+![Figure 8](./images/ros_graph.png) ***Figure 8: ROS architechure showing the ROS nodes and topics used in the project.***
 
 ROS allows these systems to run independently while, at the same time, exchanging messages. The main mechanism for communicating between modules is through a “publisher-subscription” (commonly referred to as a “pub-sub” model). In certain cases, asynchronous communications, in which one sub system can interrupt and block the processing of another system, are required. ROS supports both message passing protocols.
 
