@@ -2,7 +2,7 @@
 
 *Marek Kolodziej, Ph.D. Tim Limyl, M.S., Alejandro Terrazas, Ph.D., Jianzhou Zhao, M.S.*
 
-The purpose of this capstone project is to combine the skills garnered by the students in Udacity Self-driving Car Engineering Nanodegree in order to program Udacity’s Carla self-driving car platform.  The students combined skills in computer vision, vehicle control systems, and integration through the Robot Operating System (ROS; <https://www.ros.org>).
+The purpose of this capstone project is to combine the skills garnered by the students in Udacity Self-driving Car Engineering Nanodegree in order to program Udacity’s Carla self-driving car platform.  The students combined skills in computer vision, vehicle control systems, and integration through the Robot Operating System ([ROS](https://www.ros.org>)).
 
 ## Project Aims
 
@@ -13,7 +13,7 @@ __1)__ staying in a single lane and __2)__ stopping at red traffic lights.  Goal
 
 The project proceeded in two stages.  First, basic elements of the system were developed to run on Udacity’s simulator (***Figure 1***).  The simulator is a virtual reality 3D environment with three lanes of traffic and eight lights.  There are no other cars in the environment.  In order to pass the first test, the simulated vehicle must stop “safely”, that is smoothly and before the white line, at each red light, decide to stop or continue through each yellow light, and continue through each green light at an appropriate speed.  
 
-![Figure 1](./images/Simulator.png)***Figure 1 Simulator showing car at the starting position.*** *Manual mode allows the operator to use cursor controls and the mouse to drive the car; otherwise, the car is under control of the waypoint generator (see below).  By clicking the camera box, the user is able to see the view from the simlated car's camera.  The simulator software is developed in Unity 3D.  There are eight different lights situated around the circuitous track.*   
+![Figure 1](./images/Simulator.png)***Figure 1 Simulator showing car at the starting position.*** *Manual mode allows the operator to use cursor controls and the mouse to drive the car; otherwise, the car is under control of the waypoint generator (see below).  By clicking the camera box, the user is able to see the view from the simlated car's camera.  The simulator software is developed in [Unity 3D](https://unity.com/).  There are eight different lights situated around the circuitous track.*   
 
 Once the software system passes the first test on the simulator, it is transferred to Udacity’s Carla (***Figure 2***) to run on a real-world (albeit greatly simplified) track.  The traffic lights encountered on the test track are substantially different than the traffic lights encountered in the simulator.  Moreover, conditions on the test track include glare and poor contrast among other challenges.   
 
@@ -21,27 +21,28 @@ Once the software system passes the first test on the simulator, it is transferr
 
 ## Object Detection and Classification System
 
-In order to react correctly to the traffic lights, the software system must achieve __1) detection.__ Identify the traffic light housing with a bounding box and __2)__ Classification.__ Look within the bounding box to determine the state of the light (green, yellow, red).  A single shot detector (SSD; Liu et al. 2016 <https://arxiv.org/abs/1512.02325>) was used for this purpose.
+In order to react correctly to the traffic lights, the software system must achieve __1) detection.__ Identify the traffic light housing with a bounding box and __2)__ Classification.__ Look within the bounding box to determine the state of the light (green, yellow, red).  A single shot detector (SSD, [Liu et al. 2016](https://arxiv.org/abs/1512.02325)) was used for this purpose.
 
 ![Figure 3](./images/ssd_architecture.png)
 ***Figure 3: The SSD neural network architecture.***
 
-The SSD used in this project took advantage of ***transfer learning*** in which a pretrained network is adapted for use in a specific project. The pretrained network selected was from the TensorFlow Zoo, which is a collection of detection models pre-trained on massive datasets. (<https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md>). 
+The SSD used in this project took advantage of ***transfer learning*** in which a pretrained network is adapted for use in a specific project. The pretrained network selected was from the [TensorFlow Zoo](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md), which is a collection of detection models pre-trained on massive datasets.
 
-Since the automotive hardware is closer to mobile or embedded devices than cloud GPUs, the MobileNet neural network designed for running very efficiently (high FPS, low memory footprint) on mobile devices, is integrated as the base network instead of VGG-16 shown in ***Figure 3***. The MobileNet can reduce the size of cummulative parameters and therefore the computation required on automotive/ mobile hardwares with limited resources (Andrew et al. 2017 <https://arxiv.org/abs/1704.04861>).
+Since the automotive hardware is closer to mobile or embedded devices than cloud GPUs, the MobileNet neural network designed for running very efficiently (high FPS, low memory footprint) on mobile devices, is integrated as the base network instead of VGG-16 shown in ***Figure 3***. The MobileNet can reduce the size of cummulative parameters and therefore the computation required on automotive/ mobile hardwares with limited resources ([Andrew et al. 2017](https://arxiv.org/abs/1704.04861>)).
 
-As already noted, the virtual camera and the real-world were substantially different (***Figure 4***) The virtual camera on the simulator produces 800 x 600 pixel (height by width) tri-color (blue, green red) images. These images were captured to disk for use in training and testing the computer vision module. In order to address the differences between the simulator and the real-world test track images, a mixture of real and simulator images were used for training, validation, and testing of the computer vision algorithms. Early development of the computer vision system relied on simulation images only. Following success with the simulator testing, additional images from the Bosch Small Traffic Light Dataset <https://hci.iwr.uni-heidelberg.de/node/6132> were mixed in.
+As already noted, the virtual camera and the real-world were substantially different (***Figure 4***) The virtual camera on the simulator produces 800 x 600 pixel (height by width) tri-color (blue, green red) images. These images were captured to disk for use in training and testing the computer vision module. In order to address the differences between the simulator and the real-world test track images, a mixture of real and simulator images were used for training, validation, and testing of the computer vision algorithms. Early development of the computer vision system relied on simulation images only. Following success with the simulator testing, additional images from the [Bosch Small Traffic Light Dataset](https://hci.iwr.uni-heidelberg.de/node/6132) were mixed in.
 
 <table><tr>
 <td> <img src="./images/RealworldUdacity.png" alt="Drawing" style="width: 250px;"/> </td>
 <td> <img src="./images/SimulatorLights.png" style="width: 250px;"/> </td>
 </tr></table>  
 
-***Figure 4: Traffic light images from Carla (left) and the Udacity simulator (right).***  *Significant differences can be seen between the two images.  In the Carla real-world image, there is significant reflection from the dash upon the windshield that is not present in the simulator image.  Moreover, the simulator traffic lights are always of the overhead variety and come in groups of three housings, while the Carla image contains a single housing mounted on a post.  The sizes of the images are also different.  The differences between the simulator and Carla images make it necessary to train the light detection and classification module using a mixture of real world and simulator images. 
+***Figure 4: Traffic light images from Carla (left) and the Udacity simulator (right).*** Significant differences can be seen between the two images.  In the Carla real-world image, there is significant reflection from the dash upon the windshield that is not present in the simulator image.  Moreover, the simulator traffic lights are always of the overhead variety and come in groups of three housings, while the Carla image contains a single housing mounted on a post.  The sizes of the images are also different.  The differences between the simulator and Carla images make it necessary to train the light detection and classification module using a mixture of real world and simulator images. 
 
 The goal of object detection is to place a bounding box around the object of interest.  ***Figure 5*** below, shows an example image with bounding boxes around detected objects.
 
 ![Figure 5](./images/boundingbox.png)
+
  ***Figure 5, Example image showing bounding boxes surrounding detected objects.***  *The image demonstrates correct detection of two traffic light housing and one incorrect detection of trees.  The second stage of the detection and classification is to determine whether the lights are green, yellow, or red.. Moreover, it is necessary to eliminate the false positive (lower right corner) surrounding the trees.  The false positive can be eliminated based on the shape of the bounding box because traffic lights are distinctively shaped as vertically oriented rectangles, while, the false positive is more square in shape. As shown in* ***Figure 4***, *above, the simulator does not contain overhead lights; therefore, looking in the upper part of the image would not work well for the Carla images.*
 
 ## Performance of the Traffic Light Detection and Classification System
@@ -52,9 +53,10 @@ The object detection and classification software was written in Python 3.7 and T
 
 ## Carla
 
-Udacity’s Carla contains subsystems for __1)__sensing, __2)__ perception, __3)__ planning and __4)__ control.  These subsystems are described below.  Figure 5, shows an overview of Carla's subsystems. 
+Udacity’s Carla contains subsystems for __1)__ sensing, __2)__ perception, __3)__ planning and __4)__ control.  These subsystems are described below.  Figure 5, shows an overview of Carla's subsystems. 
 
 ![Figure 6](./images/CarlaArchitecture.png) 
+
 ***Figure 6.  Architecture of Carla, the Udacity Self-driving Car.*** *The four modules work independently but exchange data via robot operating system (ROS) nodes (see description of ROS under ***Software Used*** below.* Image borrowed from Udacity Self-driving Car Nanodegree course materials.
 
 ***Sensing.*** The sensing subsystem is comprised of several cameras, an inertial measurement unit (IMU), and RADAR and LIDAR sensors.  The camera producing the images provided for this project are mounted behind the windshield (see ***Figure 4 (left)***, above).  Not included in this project (but part of Carla) are a RADAR sensor and a LIDAR sensor both of which provide the distance to nearby objects. The RADAR is forward facing and only senses the distance to objects in front of the car.  The LIDAR system has a 360-degree view that provides distance to objects in all directions. The GPS provides an estimate of position in global coordinates with 1-2 meters resolution. The IMU estimates displacement of the car in the x (forward-backward), y (left-right) and z (up-down) directions, along with the angular displacement.  
