@@ -6,7 +6,8 @@ The purpose of this capstone project is to combine the skills garnered by the st
 
 ## Project Aims
 
-The project’s aims were scaled down from a full self-driving car application and, instead focused on __1)__ staying in a single lane and __2)__ stopping at red traffic lights.  Goals such as changing lanes, planning optimal routes, and reacting to traffic were not included in this project; although these were covered in other projects during the Nanodegree program.
+The project’s aims were scaled down from a full self-driving car application and, instead focused on 
+__1)__ staying in a single lane and __2)__ stopping at red traffic lights.  Goals such as changing lanes, planning optimal routes, and reacting to traffic were not included in this project; although these were covered in other projects during the Nanodegree program.
 
 ## Project Stages
 
@@ -22,7 +23,7 @@ Once the software system passes the first test on the simulator, it is transferr
 
 In order to react correctly to the traffic lights, the software system must achieve __1) detection.__ Identify the traffic light housing with a bounding box and __2)__ Classification.__ Look within the bounding box to determine the state of the light (green, yellow, red).  A single shot detector (SSD; Liu et al. 2016 <https://arxiv.org/abs/1512.02325>) was used for this purpose.
 
-![Figure 3](images/SSD_architecture.png)
+![Figure 3](./images/SSD_architecture.png)
 ***Figure 3: The SSD neural network architecture.***
 
 The SSD used in this project took advantage of ***transfer learning*** in which a pretrained network is adapted for use in a specific project. The pretrained network selected was from the TensorFlow Zoo, which is a collection of detection models pre-trained on massive datasets. (<https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md>). 
@@ -34,11 +35,14 @@ As already noted, the virtual camera and the real-world were substantially diffe
 <table><tr>
 <td> <img src="./images/RealworldUdacity.png" alt="Drawing" style="width: 250px;"/> </td>
 <td> <img src="./images/SimulatorLights.png" style="width: 250px;"/> </td>
-</tr></table>  ***Figure 4: Traffic light images from Carla (left) and the Udacity simulator (right).***  *Significant differences can be seen between the two images.  In the Carla real-world image, there is significant reflection from the dash upon the windshield that is not present in the simulator image.  Moreover, the simulator traffic lights are always of the overhead variety and come in groups of three housings, while the Carla image contains a single housing mounted on a post.  The sizes of the images are also different.  The differences between the simulator and Carla images make it necessary to train the light detection and classification module using a mixture of real world and simulator images.* 
+</tr></table>  
+
+***Figure 4: Traffic light images from Carla (left) and the Udacity simulator (right).***  *Significant differences can be seen between the two images.  In the Carla real-world image, there is significant reflection from the dash upon the windshield that is not present in the simulator image.  Moreover, the simulator traffic lights are always of the overhead variety and come in groups of three housings, while the Carla image contains a single housing mounted on a post.  The sizes of the images are also different.  The differences between the simulator and Carla images make it necessary to train the light detection and classification module using a mixture of real world and simulator images. 
 
 The goal of object detection is to place a bounding box around the object of interest.  ***Figure 5*** below, shows an example image with bounding boxes around detected objects.
 
-![Figure 5](./images/boundingbox.png) ***Figure 5, Example image showing bounding boxes surrounding detected objects.***  *The image demonstrates correct detection of two traffic light housing and one incorrect detection of trees.  The second stage of the detection and classification is to determine whether the lights are green, yellow, or red.. Moreover, it is necessary to eliminate the false positive (lower right corner) surrounding the trees.  The false positive can be eliminated based on the shape of the bounding box because traffic lights are distinctively shaped as vertically oriented rectangles, while, the false positive is more square in shape. As shown in* ***Figure 4***, *above, the simulator does not contain overhead lights; therefore, looking in the upper part of the image would not work well for the Carla images.*
+![Figure 5](./images/boundingbox.png)
+ ***Figure 5, Example image showing bounding boxes surrounding detected objects.***  *The image demonstrates correct detection of two traffic light housing and one incorrect detection of trees.  The second stage of the detection and classification is to determine whether the lights are green, yellow, or red.. Moreover, it is necessary to eliminate the false positive (lower right corner) surrounding the trees.  The false positive can be eliminated based on the shape of the bounding box because traffic lights are distinctively shaped as vertically oriented rectangles, while, the false positive is more square in shape. As shown in* ***Figure 4***, *above, the simulator does not contain overhead lights; therefore, looking in the upper part of the image would not work well for the Carla images.*
 
 ## Performance of the Traffic Light Detection and Classification System
 
@@ -331,4 +335,3 @@ The simulator launch will be similar for MacOS and Windows. Follow the OS-specif
 ## Demo YouTube video
 
 To see the full simulator track run, click [here](https://www.youtube.com/watch?v=eEbDz6ZHaAg).
-
