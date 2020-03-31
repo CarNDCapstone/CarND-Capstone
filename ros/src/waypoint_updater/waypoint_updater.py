@@ -34,7 +34,6 @@ class WaypointUpdater(object):
 
         self.base_lane = None
         self.pose = None
-        self.obstacle = None
         self.stopline_wp_idx = -1
         self.waypoints_2d = None
         self.waypoint_tree = None       
@@ -42,9 +41,6 @@ class WaypointUpdater(object):
         rospy.Subscriber('/current_pose', PoseStamped, self.pose_cb)
         rospy.Subscriber('/base_waypoints', Lane, self.waypoints_cb)
         rospy.Subscriber('/traffic_waypoint', Int32, self.traffic_cb)
-
-        # TODO: Add a subscriber for /traffic_waypoint and /obstacle_waypoint below
-        rospy.Subscriber('/vehicle/obstacle', PoseStamped, self.obstacle_cb)
 
         self.final_waypoints_pub = rospy.Publisher('final_waypoints', Lane, queue_size=1)
 
@@ -106,31 +102,11 @@ class WaypointUpdater(object):
         closest_idx = self.get_closest_waypoint_idx()
         farthest_idx = closest_idx + LOOKAHEAD_WPS
         base_waypoints = self.base_lane.waypoints[closest_idx:farthest_idx]
-        obst = self.decelerate_obstacle()
-        if (self.stopline_wp_idx == -1 or (self.stopline_wp_idx >= farthest_idx)) and len(obst) == 0:
+        if self.stopline_wp_idx == -1 or self.stopline_wp_idx >= farthest_idx:
             lane.waypoints = base_waypoints
         else:
-            lane.waypoints = self.decelerate_waypoints(base_waypoints, closest_idx) + obst
+            lane.waypoints = self.decelerate_waypoints(base_waypoints, closest_idx)
         return lane
-
-    def decelerate_obstacle(self):
-        # TODO: calculate safe dist based on speed
-        if not self.obstacle:
-            return []
-        car_pose = self.pose.pose.position
-        obstacle_pose = self.obstacle.pose.position
-        dl = lambda a, b: math.sqrt((a.x-b.x)**2 + (a.y-b.y)**2  + (a.z-b.z)**2) 
-        in_front = obstacle_pose.x > car_pose.x
-        if in_front:
-            dist = dl(car_pose, obstacle_pose)
-            vel = math.sqrt(2 * MAX_DECEL * dist)
-            if vel < 1.:
-                vel = 0.
-            p = Waypoint()
-            p.pose = obstacle.pose
-            p.twist.twist.linear.x = vel
-            return [p]
-        return []
 
     def decelerate_waypoints(self, waypoints, closest_idx):
         temp = []
@@ -152,8 +128,7 @@ class WaypointUpdater(object):
         self.stopline_wp_idx = msg.data
 
     def obstacle_cb(self, msg):
-        # TODO: Callback for /obstacle_waypoint message. We will implement it later
-        self.obstacle = msg
+        pass
 
     def get_waypoint_velocity(self, waypoint):
         return waypoint.twist.twist.linear.x
