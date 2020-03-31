@@ -1,7 +1,41 @@
 ## Udacity CarND Capstone Submission
 
+## Demo YouTube video
+
+To see the full simulator track run, click [here](https://www.youtube.com/watch?v=eEbDz6ZHaAg).
+
 ## Installation and Execution
 
+### In the Udacity workspace / on Carla
+
+We found the Udacity workspace to be extremely slow - even without the deep learning model, ROS nodes wouldn't get the data from the simulator fast enough, and so the simulator feedback was delayed so much so as not to meet real-time requirements. However, we assume that something was wrong with the state of the VMs in which our workspaces were running, and it's not a systemic problem. It is possible to run the code in a workspace environment if the hardware is more responsive, and therefore to run on Carla as well. The Docker environment discussed below allowed us to deploy on a system that was fast enough for real-time to pass the simulator submission.
+
+Note that the default setup in the codebase is for the Docker environment, which uses TensorFlow 1.15. The Udacity workspace/Carla steps below mention where to change the TensorFlow model import from 1.15 to 1.3. Please note that if the Udacity workspace environment proves to be too slow for grading like it did for us (again - too slow even without the deep learning-based traffic light detector), we recommend the Docker steps mentioned after this section to run on any reasonably well-powered laptop (not to mention workstation) - the code should be fast enough even without GPU acceleration.
+
+Workspace steps:
+
+* Clone the repo:
+```
+git clone https://github.com/CarNDCapstone/CarND-Capstone.git && cd CarND-Capstone/ros
+```
+* Run catkin_make
+```
+catkin_make
+```
+* Load env vars
+```
+source devel/setup.bash
+```
+* Change from TF 1.15 (Docker) to 1.3 (workspace)
+Either change `TF_VERSION = "1.15"` to `1.3` in `src/tl_detector/light_classification/tl_classifier.py`, or type the following while being in the `ros` subdirectory of the repository:
+```
+git apply workspace.patch
+```
+* Start ROS nodes
+```
+roslaunch launch/styx.launch
+```
+* Start the Udacity simulator as usual
 ### In a Docker container
 
 0. **Hardware specs tested**
@@ -212,33 +246,3 @@ Next, select the "Highway" simulator.
 When the simulator launches, select the "Camera" check box to provide the video feed to the traffic light detector, and unselect "Manual" to enable drive-by-wire (DBW).
 
 The simulator launch will be similar for MacOS and Windows. Follow the OS-specific instructions provided by Udacity.
-
-
-### In the Udacity workspace / on Carla
-
-We found the Udacity workspace to be extremely slow - even without the deep learning model, ROS nodes wouldn't get the data from the simulator fast enough, and so the simulator feedback was delayed so much so as not to meet real-time requirements. However, we assume that something was wrong with the state of the VMs in which our workspaces were running, and it's not a systemic problem. It is possible to run the code in a workspace environment if the hardware is more responsive, and therefore to run on Carla as well. The Docker environment above simply allowed us to deploy on a system that was fast enough for real-time to pass the simulator submission.
-
-Workspace steps:
-
-* Clone the repo:
-```
-git clone https://github.com/CarNDCapstone/CarND-Capstone.git && cd CarND-Capstone/ros
-```
-* Run catkin_make
-```
-catkin_make
-```
-* Load env vars
-```
-source devel/setup.bash
-```
-* Change from TF 1.15 (Docker) to 1.3 (workspace)
-Either change `TF_VERSION = "1.15"` to `1.3` in `src/tl_detector/light_classification/tl_classifier.py`, or type the following while being in the `ros` subdirectory of the repository:
-```
-git apply workspace.patch
-```
-* Start ROS nodes
-```
-roslaunch launch/styx.launch
-```
-* Start the Udacity simulator as usual
