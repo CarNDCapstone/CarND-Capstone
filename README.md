@@ -95,34 +95,34 @@ ROS has several tools that aid in the development of an integrated system. The s
 
 ### In the Udacity workspace / on Carla
 
-*Note: Performance on the Udacity workspace was extremely slow.  Even without the deep learning model, the ROS nodes wouldn't exchange the data from the simulator fast enough, and so the simulator feedback was delayed so much so as not to meet real-time requirements. The team proceeded under the assumption that something was wrong with the state of the VM in which these workspaces were running rather than a systemic problem. It is possible to run the code in a workspace environment if the hardware is more responsive, and therefore to run on Carla as well. The Docker environment discussed below enabled deployment on a system that was fast enough for real-time to pass the simulator submission.*
+*Note: Performance on the Udacity workspace was extremely slow.  Even without the deep learning model, the ROS nodes wouldn't exchange the data from the simulator fast enough, and so the simulator feedback was delayed so much so as not to meet real-time requirements. It is possible to run fast enough in the workspace, if the waypoint updater's frequency is reduced from 50 Hz to 15 Hz. This is good enough because autonomy disengages at 10 Hz, however clearly it's not realistic for a real car. The simulator should run fine with that setting, though. The Docker environment discussed below enabled deployment on a system that was fast enough for real-time (50 Hz). It's possible that Carla would run at 50 Hz with the workspace settings, too.
 
-The default setup in the codebase is for the Docker environment, which uses TensorFlow 1.15. The Udacity workspace/Carla steps below mention where to change the TensorFlow model import from 1.15 to 1.3. Please note that if the Udacity workspace environment proves to be too slow for grading (again - too slow even without the deep learning-based traffic light detector), the Docker steps mentioned after this section are sufficient to run on any reasonably well-powered laptop (not to mention workstation) - the code should be fast enough even without GPU acceleration.
+Checking out the master branch of this repository will run fine in the workspace environment. To follow the Docker steps for better performance on other machines, please check out the docker branch instead.
 
 Workspace steps:
 
 * Clone the repo:
 ```
-git clone https://github.com/CarNDCapstone/CarND-Capstone.git && cd CarND-Capstone/ros
+git clone https://github.com/CarNDCapstone/CarND-Capstone.git && cd CarND-Capstone
 ```
-* Run catkin_make
+* Install requirements
 ```
-catkin_make
+pip install -r requirements.txt
+```
+* Change dir to ros and run catkin_make
+```
+cd ros && catkin_make
 ```
 * Load env vars
 ```
 source devel/setup.bash
-```
-* Change from TF 1.15 (Docker) to 1.3 (workspace)
-Either change `TF_VERSION = "1.15"` to `1.3` in `src/tl_detector/light_classification/tl_classifier.py`, or type the following while being in the `ros` subdirectory of the repository:
-```
-git apply workspace.patch
 ```
 * Start ROS nodes
 ```
 roslaunch launch/styx.launch
 ```
 * Start the Udacity simulator as usual
+
 ### In a Docker container
 
 0. **Hardware specs tested**
@@ -148,8 +148,9 @@ The simulator requires significant CPU power, as does ROS. If the neural network
 
 The repository can be found [here](https://github.com/CarNDCapstone/CarND-Capstone). To clone the repository, type:
 
+* Clone the repository with the docker branch 
 ```
-git clone https://github.com/CarNDCapstone/CarND-Capstone.git
+git clone https://github.com/CarNDCapstone/CarND-Capstone.git -b docker
 ```
 Also, make sure to change directories to the repo:
 ```
@@ -337,3 +338,4 @@ The simulator launch will be similar for MacOS and Windows. Follow the OS-specif
 ## Demo YouTube video
 
 To see the full simulator track run, click [here](https://www.youtube.com/watch?v=eEbDz6ZHaAg).
+
