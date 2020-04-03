@@ -21,7 +21,7 @@ from scipy.stats import mode
 
 MODEL_NAME = 'light_classification/' + 'ssd_custom_graph'
 print("MODEL_NAME = %s" % MODEL_NAME)
-TF_VERSION = "1.15" # use 1.3 in Udacity workspace
+TF_VERSION = "1.3" # use 1.15 in Docker container
 PATH_TO_FROZEN_GRAPH = MODEL_NAME + '/frozen_inference_graph_tf_%s.pb' % TF_VERSION
 PATH_TO_LABELS = 'light_classification/training/label_map.pbtxt'
 NUM_CLASSES = 3 
