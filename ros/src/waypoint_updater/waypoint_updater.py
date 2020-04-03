@@ -102,9 +102,19 @@ class WaypointUpdater(object):
         closest_idx = self.get_closest_waypoint_idx()
         farthest_idx = closest_idx + LOOKAHEAD_WPS
         base_waypoints = self.base_lane.waypoints[closest_idx:farthest_idx]
-        if self.stopline_wp_idx == -1 or self.stopline_wp_idx >= farthest_idx:
+        #if self.stopline_wp_idx == -1 or self.stopline_wp_idx >= farthest_idx:
+        if self.stopline_wp_idx >= farthest_idx: # green light
             lane.waypoints = base_waypoints
-        else:
+        elif self.stopline_wp_idx < 0: # yellow light
+            self.stopline_wp_idx = -self.stopline_wp_idx
+            stop_idx = min(max(self.stopline_wp_idx - closest_idx - 2, 0), len(base_waypoints)-1)
+            dist_yellow = self.distance(base_waypoints, 0, stop_idx)
+            # yellow light lasts for 3 sec, do not brake when close 
+            if dist_yellow < 2.5 * self.get_waypoint_velocity(base_waypoints[0]):
+                lane.waypoints = base_waypoints
+            else: # slow down as red light if far from it
+                lane.waypoints = self.decelerate_waypoints(base_waypoints, closest_idx)
+        else: # red light
             lane.waypoints = self.decelerate_waypoints(base_waypoints, closest_idx)
         return lane
 
@@ -114,7 +124,7 @@ class WaypointUpdater(object):
             p = Waypoint()
             p.pose = wp.pose
             # Two waypoints back from line so front of the car stops at line
-            stop_idx = max(self.stopline_wp_idx - closest_idx - 2, 0)
+            stop_idx = min(max(self.stopline_wp_idx - closest_idx - 2, 0), len(waypoints)-1)
             dist = self.distance(waypoints, i, stop_idx)
             vel = math.sqrt(2 * MAX_DECEL * dist)
             if vel < 1.:

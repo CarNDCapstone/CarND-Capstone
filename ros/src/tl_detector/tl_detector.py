@@ -9,6 +9,7 @@ from cv_bridge import CvBridge
 import tf
 import cv2
 import yaml
+import math
 
 from light_classification.tl_classifier import TLClassifier
 
@@ -43,6 +44,12 @@ class TLDetector(object):
         simulator. When testing on the vehicle, the color state will not be available. You'll need to
         rely on the position of the light and the camera image to predict it.
         '''
+
+        self.state = TrafficLight.UNKNOWN
+        self.last_state = TrafficLight.UNKNOWN
+        self.last_wp = -1
+        self.state_count = 0
+
         sub3 = rospy.Subscriber('/vehicle/traffic_lights', TrafficLightArray, self.traffic_cb)
         sub6 = rospy.Subscriber('/image_color', Image, self.image_cb)
 
@@ -54,11 +61,6 @@ class TLDetector(object):
         self.bridge = CvBridge()
         self.light_classifier = TLClassifier()
         self.listener = tf.TransformListener()
-
-        self.state = TrafficLight.UNKNOWN
-        self.last_state = TrafficLight.UNKNOWN
-        self.last_wp = -1
-        self.state_count = 0
 
         rospy.spin()
 
@@ -95,14 +97,26 @@ class TLDetector(object):
         of times till we start using it. Otherwise the previous stable state is
         used.
         '''
-        if self.state != state:
+        if state == TrafficLight.UNKNOWN:
+            self.state_count = 0
+        elif self.state != state:
             self.state_count = 0
             self.state = state
         elif self.state_count >= STATE_COUNT_THRESHOLD:
-            self.last_state = self.state
-            light_wp = light_wp if state == TrafficLight.RED else -1
-            self.last_wp = light_wp
-            self.upcoming_red_light_pub.publish(Int32(light_wp))
+            # self.last_state = self.state
+            # light_wp = light_wp if state == TrafficLight.RED else -1
+            if state == TrafficLight.YELLOW and self.last_state != TrafficLight.RED:
+                # yellow light only exist after green light, invalid if detected after red light
+                light_wp = -light_wp
+            elif state == TrafficLight.GREEN:
+                light_wp = 12000 # greater than overall waypoint number
+            else: pass
+
+            if not (self.last_state == TrafficLight.YELLOW and self.state == self.last_state):
+                # only publish yellow one time after detection
+                self.last_state = self.state
+                self.last_wp = light_wp
+                self.upcoming_red_light_pub.publish(Int32(light_wp))
         else:
             self.upcoming_red_light_pub.publish(Int32(self.last_wp))
         self.state_count += 1
@@ -170,7 +184,7 @@ class TLDetector(object):
                 self.pose.pose.position.y)
 
         #TODO find the closest visible traffic light (if one exists)
-        diff = len(self.waypoints.waypoints)
+        diff = 250 # slightly bigger than LOOKAHEAD_WPS (about 150m with max cruise speed)
         for i, light in enumerate(self.lights):
             # Get stop line waypoint index
             line = stop_line_positions[i]
@@ -188,13 +202,23 @@ class TLDetector(object):
             start = time()
             state = self.get_light_state()
             duration = time() - start
-            out_str = "Traffic light color: %s" % COLOR_TO_STRING[state]
+            out_str = "Light: %s" % COLOR_TO_STRING[state]
+            out_str += ", distance: %.0f points" % (line_wp_idx - car_wp_idx)
+            out_str += ", %.2f m" % self.distance(self.waypoints.waypoints, car_wp_idx, line_wp_idx)
             if self.has_image:
-                out_str += ", inference_time = %.2f ms" % (duration * 1000)
+                out_str += ", time = %.2f ms" % (duration * 1000)
             self.light_detector_pub.publish(out_str)
             return line_wp_idx, state
 
         return -1, TrafficLight.UNKNOWN
+
+    def distance(self, waypoints, wp1, wp2):
+        dist = 0
+        dl = lambda a, b: math.sqrt((a.x-b.x)**2 + (a.y-b.y)**2  + (a.z-b.z)**2)
+        for i in range(wp1, wp2+1):
+            dist += dl(waypoints[wp1].pose.pose.position, waypoints[i].pose.pose.position)
+            wp1 = i
+        return dist
 
 if __name__ == '__main__':
     try:
