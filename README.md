@@ -1,6 +1,6 @@
 # Self-driving Car Engineer Nanodegree Capstone Project:  Program an Autonomous Vehicle
 
-*Marek Kolodziej, Ph.D. Tim Limyl, M.S., Alejandro Terrazas, Ph.D.*
+*Marek Kolodziej, Ph.D. Timothy Lim Yong lee, M.S., Alejandro Terrazas, Ph.D.*
 
 The purpose of this capstone project is to combine the skills garnered by the students in Udacity's Self-driving Car Engineering Nanodegree in order to program Carla, Udacity's self-driving car platform.  The students combined skills in computer vision, vehicle control systems, and integration through the Robot Operating System ([ROS](https://www.ros.org>)).
 
@@ -23,7 +23,7 @@ Once the software system passes the first test on the simulator, it is transferr
 
 In order to react correctly to the traffic lights, the software system must achieve: __1) Detection.__ Identify the traffic light housing with a bounding box and __2) Classification.__ Look within the bounding box to determine the state of the light (green, yellow, red). This can be done by taking advantage of ***transfer learning*** in which the object detection network is pretrained on a huge image datasets such as the [COCO Dataset](http://cocodataset.org/). [TensorFlow Detection Model Zoo](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md) offers a number of collection of detection models pre-trained on massive datasets. 
 
-The pretrained network selected for use is the `ssd_mobilenet_v2_coco` which is using the Single Shot Detector algorithm (SSD, [Liu et al. 2016](https://arxiv.org/abs/1512.02325)) with MobileNet base network trained on the COCO Dataset. 
+The pretrained network selected for use is the `ssd_mobilenet_v2_coco` which is utilising the Single Shot Detector algorithm (SSD, [Liu et al. 2016](https://arxiv.org/abs/1512.02325)) with MobileNet base network trained on the COCO Dataset. 
 ![Figure 3](./images/ssd_mobilnet.png)
 ***Figure 3: The SSD neural network architecture.[credits](http://ceur-ws.org/Vol-2500/paper_5.pdf)***
 
@@ -31,12 +31,13 @@ Example of results from directly using the object detection network without edit
 
 ![Figure 4](./images/boundingbox.png)
 
- ***Figure 4: Example image showing bounding boxes surrounding detected objects.***  *The image demonstrates correct detection of two traffic light housings and dection trees. COCO Datasets already contains traffic lights as one of its object categories.*
+ ***Figure 4: Example image showing bounding boxes surrounding detected objects.***  *The image demonstrates correct detection of two traffic light housings and detection of trees. COCO Datasets already contains traffic lights as one of its object categories.*
  
 Since the automotive hardware is closer to mobile or embedded devices than cloud GPUs, the MobileNet neural network designed for running very efficiently (high FPS, low memory footprint) on mobile devices, was integrated as the base network. The MobileNet can reduce the size of cummulative parameters and therefore the computation required on automotive/ mobile hardwares with limited resources ([Andrew et al. 2017](https://arxiv.org/abs/1704.04861>)).
 
 
 Note that after identify the traffic lights, we will need to run another classification network to detect the state of the light.
+
 **We can bypass the need to run separate networks to identify traffic light and classify the state of the light by making our own custom object detector that immediately detects the state of the traffic lights instead. By doing so, we will only need to run a single network which saves us computational power and it will run faster than having two separate network.**
 
 ## Custom Object Detection 
