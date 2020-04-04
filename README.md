@@ -25,7 +25,7 @@ In order to react correctly to the traffic lights, the software system must achi
 
 The pretrained network selected for use is the `ssd_mobilenet_v2_coco` which is utilising the Single Shot Detector algorithm (SSD, [Liu et al. 2016](https://arxiv.org/abs/1512.02325)) with MobileNet base network trained on the COCO Dataset. 
 ![Figure 3](./images/ssd_mobilnet.png)
-***Figure 3: The SSD neural network architecture.[credits](http://ceur-ws.org/Vol-2500/paper_5.pdf)***
+***Figure 3: The SSD neural network architecture.[Image credit](http://ceur-ws.org/Vol-2500/paper_5.pdf)***
 
 Example of results from directly using the object detection network without editing the output results (Using it right out of the box):
 
