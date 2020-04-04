@@ -1,6 +1,6 @@
 # Self-driving Car Engineer Nanodegree Capstone Project:  Program an Autonomous Vehicle
 
-*Marek Kolodziej, Ph.D. Timothy Lim Yong lee, M.S., Alejandro Terrazas, Ph.D.*
+*Marek Kolodziej, Ph.D. Timothy Lim Yong Lee, M.S., Alejandro Terrazas, Ph.D.*
 
 The purpose of this capstone project is to combine the skills garnered by the students in Udacity's Self-driving Car Engineering Nanodegree in order to program Carla, Udacity's self-driving car platform.  The students combined skills in computer vision, vehicle control systems, and integration through the Robot Operating System ([ROS](https://www.ros.org>)).
 
@@ -46,11 +46,11 @@ For more information on custom making the object detector to detect our own obje
 
 Sample results from custom object detector trained to detect only state of traffic lights:
 
-Click into the images for a clearer view:
-
+*Click into the images for a clearer view*
 Red Light                  |  Yellow Light    | Green Light
 :-------------------------:|:-------------------------:|:-------------------------:
 ![red](images/red.png)   | ![yellow](images/yellow.png) | ![green](images/green.png)
+
 
 
 As already noted, the virtual camera and the real-world camera were substantially different (***Figure 4***) The virtual camera on the simulator produces 800 x 600 pixel (height by width) tri-color (blue, green red) images. These images were captured to disk for use in training and testing the computer vision module. In order to address the differences between the simulator and the real-world test track images, a mixture of real and simulator images were used for training, validation, and testing of the computer vision algorithms. Early development of the computer vision system relied on simulator images only. Following success with the simulator testing, additional images from the Carla (Udacity Self Driving Car) were mixed in.
@@ -71,7 +71,7 @@ The performance of the detection and classification system was measured separate
 
 The object detection and classification software was written in Python 3.7 and TensorFlow version 1.15.
 
-## Carla
+# Carla
 
 Udacity’s Carla contains subsystems for __1)__ sensing, __2)__ perception, __3)__ planning and __4)__ control.  These subsystems are described below.  ***Figure 6*** shows an overview of Carla's subsystems. 
 
@@ -95,7 +95,7 @@ None of the individual sensors are sufficient for localizing the car to the degr
 
 After passing the simulator test, the testing moved to the real world using Carla. Some minor modification to the code (setting flags) was necessary in order to run the code on Carla; however, the goal was to produce one software system that could successfuly drive *without human intervention* on both the simulator and Carla.
 
-## Software Used
+# Software Used
 
 ### Robot Operating System (ROS)
 
@@ -111,7 +111,7 @@ Another important benefit of using ROS is the large number of device drivers tha
 
 ROS has several tools that aid in the development of an integrated system. The system developer can “peer into” the messages being exchanged and store these in a “[bag](http://wiki.ros.org/Bags)” file, which can can be replayed to the system.  Replaying past data ensures that conditions can be replicated during failure analysis.
 
-## Installation and Execution
+# Installation and Execution
 
 ### In the Udacity workspace / on Carla
 
