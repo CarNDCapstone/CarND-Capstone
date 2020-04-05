@@ -69,6 +69,12 @@ The performance of the detection and classification system was measured separate
 
 **Testing for Carla on the testing site has not been done as we are awaiting for Udacity to run our code on it**. There has not been an error while running the inference on unseen simulation images.
 
+Sample result of self driving car in simulation:
+
+![visual](images/visual.gif)
+
+The car performs as expected, decelerating to a stop when a red light is detected within critical distance and moving once it turns green.
+
 The object detection and classification software was written in Python 3.7 and TensorFlow version 1.15.
 
 # Carla
