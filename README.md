@@ -1,6 +1,6 @@
 # Self-driving Car Engineer Nanodegree Capstone Project:  Program an Autonomous Vehicle
 
-*Marek Kolodziej, Ph.D. Timothy Lim Yong Lee, M.S., Alejandro Terrazas, Ph.D.*
+*Marek Kolodziej, Ph.D. Timothy Lim Yong Lee, M.S., Alejandro Terrazas, Ph.D., Jianzhou Zhao, M.Eng.*
 
 The purpose of this capstone project is to combine the skills garnered by the students in Udacity's Self-driving Car Engineering Nanodegree in order to program Carla, Udacity's self-driving car platform.  The students combined skills in computer vision, vehicle control systems, and integration through the Robot Operating System ([ROS](https://www.ros.org>)).
 
